@@ -7,4 +7,4 @@ COPY . /tmp/app
 RUN pip --no-cache-dir install -r requirements.txt
 
 ENTRYPOINT ["python3"]
-CMD ["bot.py"]
+CMD ["/tmp/app/bot.py"]
