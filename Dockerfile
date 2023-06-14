@@ -1,6 +1,4 @@
 from registry.access.redhat.com/ubi8/python-36
-RUN apk add --no-cache py3-pip \
-    && pip3 install --upgrade pip
 
 WORKDIR /app
 COPY . /app
