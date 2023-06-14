@@ -1,8 +1,8 @@
 from python:3.11
 USER 0
 RUN pip install --upgrade pip
-WORKDIR /app
-COPY . /app
+WORKDIR /tmp/app
+COPY . /tmp/app
 
 RUN pip --no-cache-dir install -r requirements.txt
 
