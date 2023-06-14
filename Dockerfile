@@ -1,4 +1,5 @@
 from registry.access.redhat.com/ubi8/python-36
+RUN pip3 install --upgrade pip
 
 WORKDIR /app
 COPY . /app
