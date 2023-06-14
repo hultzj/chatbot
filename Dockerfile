@@ -1,4 +1,4 @@
-from registry.access.redhat.com/ubi8/python-36
+from registry.access.redhat.com/ubi8/python-39
 RUN pip install --upgrade pip
 WORKDIR /app
 COPY . /app
