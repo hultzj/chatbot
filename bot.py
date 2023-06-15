@@ -21,8 +21,9 @@ def chatbot(input):
 inputs = gr.inputs.Textbox(lines=7, label="Chat with AI")
 outputs = gr.outputs.Textbox(label="Reply")
 
-demo = gr.Interface(fn=chatbot, inputs=inputs, outputs=outputs, title="AI Chatbot",
-             description="Ask anything you want",
-             theme="compact").launch(share=True)
-
-demo.launch(server_name="0.0.0.0", server_port=8080)
+gr.Interface(fn=chatbot, inputs=inputs, outputs=outputs, title="AI Chatbot",
+    description="Ask anything you want",
+    theme="compact").launch(share=True,
+        server_name="0.0.0.0",
+        server_port = 8080
+        )
