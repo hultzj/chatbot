@@ -3,6 +3,7 @@ USER 0
 RUN pip install --upgrade pip
 WORKDIR /app
 COPY . /app
+RUN chmod -R 775 /app
 
 RUN pip --no-cache-dir install -r requirements.txt
 
