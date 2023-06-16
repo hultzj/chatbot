@@ -91,7 +91,7 @@ if uploaded_file is not None:
 
     index.save_to_disk(index_file)
 
-elif os.path.exists(index_file):
+""" elif os.path.exists(index_file):
     index = GPTVectorStoreIndex.load_index_from_storage(index_file)
 
     SimpleDirectoryReader = download_loader("SimpleDirectoryReader")
@@ -101,7 +101,7 @@ elif os.path.exists(index_file):
     sidebar_placeholder.header('Current Processing Document:')
     sidebar_placeholder.subheader(doc_filename)
     sidebar_placeholder.write(documents[0].get_text()[:10000]+'...')
-
+ """
 if index != None:
     st.text_input("Ask something: ", key='prompt')
     st.button("Send", on_click=send_click)
