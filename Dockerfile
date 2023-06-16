@@ -12,4 +12,4 @@ RUN pip install --upgrade pip && \
     set -ex && \
     wget ${KUBE_LIST}
 
-ENTRYPOINT ["streamlit", "run", "bot.py", "--server.port", "8080"]
+CMD ["streamlit", "run", "bot.py", "--server.port=8080"]
