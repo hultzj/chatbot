@@ -5,7 +5,7 @@ if not OPENAI_API_KEY:
   raise "Env variable AI Key not specified"
 
 import streamlit as st
-from llama_index import download_loader
+from llama_index import SimpleDirectoryReader
 from llama_index.node_parser import SimpleNodeParser
 from llama_index import GPTVectorStoreIndex
 from llama_index import LLMPredictor, GPTVectorStoreIndex, PromptHelper, ServiceContext
@@ -14,6 +14,7 @@ from langchain import OpenAI
 
 doc_path = '/data/'
 index_file = 'index.pdf'
+index = None
 
 if 'response' not in st.session_state:
     st.session_state.response = ''
@@ -29,15 +30,11 @@ def send_click():
 
 def load_context():
 
-    index = None
     st.title("HAL")
 
     sidebar_placeholder = st.sidebar.container()
 
-    SimpleDirectoryReader = download_loader("SimpleDirectoryReader")
-
-    loader = SimpleDirectoryReader(doc_path, recursive=True, exclude_hidden=True)
-    documents = loader.load_data()
+    documents = SimpleDirectoryReader(doc_path).load_data()
     sidebar_placeholder.header('Current Processing Document:')
     sidebar_placeholder.subheader(index_file)
     sidebar_placeholder.write(documents[0].get_text()[:10000]+'...')
