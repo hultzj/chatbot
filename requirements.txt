@@ -2,3 +2,4 @@ openai
 gradio 
 llama-index
 streamlit
+pypdf
