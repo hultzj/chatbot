@@ -1,33 +1,3 @@
-""" import openai
-import gradio as gr
-import os
-
-openai.api_key = os.environ.get('AI')
-
-messages = [
-    {"role": "system", "content": "You are a helpful and kind AI Assistant."},
-]
-
-def chatbot(input):
-    if input:
-        messages.append({"role": "user", "content": input})
-        chat = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo", messages=messages
-        )
-        reply = chat.choices[0].message.content
-        messages.append({"role": "assistant", "content": reply})
-        return reply
-
-inputs = gr.inputs.Textbox(lines=7, label="Chat with AI")
-outputs = gr.outputs.Textbox(label="Reply")
-
-gr.Interface(fn=chatbot, inputs=inputs, outputs=outputs, title="AI Chatbot",
-    description="Ask anything you want",
-    theme="compact").launch(share=True,
-        server_name="0.0.0.0",
-        server_port = 8080
-        ) """
-
 import os
 OPENAI_API_KEY = os.getenv("AI")
 if not OPENAI_API_KEY:
@@ -50,7 +20,13 @@ if 'response' not in st.session_state:
     st.session_state.response = ''
 
 def send_click():
-    st.session_state.response  = index.query(st.session_state.prompt)
+    storage_context = StorageContext.from_defaults(persist_dir="<persist_dir>")
+    
+    index = load_index_from_storage(storage_context)
+
+    query_engine = index.as_query_engine(service_context=service_context, verbose=True,response_mode="compact")
+
+    st.session_state.response  = query_engine.query(st.session_state.prompt)
 
 index = None
 st.title("HAL")
@@ -89,19 +65,14 @@ if uploaded_file is not None:
         documents, service_context=service_context
     )
 
-    index.save_to_disk(index_file)
+    documents = SimpleDirectoryReader(index_file).load_data()
 
-""" elif os.path.exists(index_file):
-    index = GPTVectorStoreIndex.load_index_from_storage(index_file)
+    service_context = ServiceContext.from_defaults(llm_predictor=llm_predictor, prompt_helper=prompt_helper,embed_model=embeddings)
+    index = GPTVectorStoreIndex.from_documents(documents, service_context=service_context, prompt_helper=prompt_helper)
 
-    SimpleDirectoryReader = download_loader("SimpleDirectoryReader")
-    loader = SimpleDirectoryReader(doc_path, recursive=True, exclude_hidden=True)
-    documents = loader.load_data()
-    doc_filename = os.listdir(doc_path)[0]
-    sidebar_placeholder.header('Current Processing Document:')
-    sidebar_placeholder.subheader(doc_filename)
-    sidebar_placeholder.write(documents[0].get_text()[:10000]+'...')
- """
+    index.storage_context.persist(persist_dir="<persist_dir>")
+
+
 if index != None:
     st.text_input("Ask something: ", key='prompt')
     st.button("Send", on_click=send_click)
