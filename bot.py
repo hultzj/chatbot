@@ -13,7 +13,7 @@ from llama_index import LLMPredictor, GPTVectorStoreIndex, PromptHelper, Service
 from llama_index import StorageContext, load_index_from_storage
 from langchain import OpenAI
 
-doc_path = './data/'
+doc_path = '/data/'
 index_file = 'index.pdf'
 
 if 'response' not in st.session_state:
@@ -32,45 +32,34 @@ index = None
 st.title("HAL")
 
 sidebar_placeholder = st.sidebar.container()
-uploaded_file = st.file_uploader("Choose a file")
 
-if uploaded_file is not None:
+SimpleDirectoryReader = download_loader("SimpleDirectoryReader")
 
-    doc_files = os.listdir(doc_path)
-    for doc_file in doc_files:
-        os.remove(doc_path + doc_file)
+loader = SimpleDirectoryReader(doc_path, recursive=True, exclude_hidden=True)
+documents = loader.load_data()
+sidebar_placeholder.header('Current Processing Document:')
+sidebar_placeholder.subheader(index_file)
+sidebar_placeholder.write(documents[0].get_text()[:10000]+'...')
 
-    bytes_data = uploaded_file.read()
-    with open(f"{doc_path}{uploaded_file.name}", 'wb') as f: 
-        f.write(bytes_data)
+llm_predictor = LLMPredictor(llm=OpenAI(temperature=0, model_name="text-davinci-003"))
 
-    SimpleDirectoryReader = download_loader("SimpleDirectoryReader")
+max_input_size = 1096
+num_output = 256
+max_chunk_overlap = 20
+prompt_helper = PromptHelper(max_input_size, num_output, max_chunk_overlap)
 
-    loader = SimpleDirectoryReader(doc_path, recursive=True, exclude_hidden=True)
-    documents = loader.load_data()
-    sidebar_placeholder.header('Current Processing Document:')
-    sidebar_placeholder.subheader(uploaded_file.name)
-    sidebar_placeholder.write(documents[0].get_text()[:10000]+'...')
+service_context = ServiceContext.from_defaults(llm_predictor=llm_predictor, prompt_helper=prompt_helper)
 
-    llm_predictor = LLMPredictor(llm=OpenAI(temperature=0, model_name="text-davinci-003"))
+index = GPTVectorStoreIndex.from_documents(
+    documents, service_context=service_context
+)
 
-    max_input_size = 1096
-    num_output = 256
-    max_chunk_overlap = 20
-    prompt_helper = PromptHelper(max_input_size, num_output, max_chunk_overlap)
+documents = SimpleDirectoryReader(index_file).load_data()
 
-    service_context = ServiceContext.from_defaults(llm_predictor=llm_predictor, prompt_helper=prompt_helper)
+service_context = ServiceContext.from_defaults(llm_predictor=llm_predictor, prompt_helper=prompt_helper,embed_model=embeddings)
+index = GPTVectorStoreIndex.from_documents(documents, service_context=service_context, prompt_helper=prompt_helper)
 
-    index = GPTVectorStoreIndex.from_documents(
-        documents, service_context=service_context
-    )
-
-    documents = SimpleDirectoryReader(index_file).load_data()
-
-    service_context = ServiceContext.from_defaults(llm_predictor=llm_predictor, prompt_helper=prompt_helper,embed_model=embeddings)
-    index = GPTVectorStoreIndex.from_documents(documents, service_context=service_context, prompt_helper=prompt_helper)
-
-    index.storage_context.persist(persist_dir="<persist_dir>")
+index.storage_context.persist(persist_dir="<persist_dir>")
 
 
 if index != None:
