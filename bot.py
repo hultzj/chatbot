@@ -38,8 +38,8 @@ if not OPENAI_API_KEY:
 import streamlit as st
 from llama_index import download_loader
 from llama_index.node_parser import SimpleNodeParser
-from llama_index import GPTSimpleVectorIndex
-from llama_index import LLMPredictor, GPTSimpleVectorIndex, PromptHelper, ServiceContext
+from llama_index import GPTVectorStoreIndex
+from llama_index import LLMPredictor, GPTVectorStoreIndex, PromptHelper, ServiceContext
 from langchain import OpenAI
 
 doc_path = './data/'
