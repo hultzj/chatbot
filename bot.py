@@ -84,14 +84,14 @@ if uploaded_file is not None:
 
     service_context = ServiceContext.from_defaults(llm_predictor=llm_predictor, prompt_helper=prompt_helper)
 
-    index = GPTSimpleVectorIndex.from_documents(
+    index = GPTVectorStoreIndex.from_documents(
         documents, service_context=service_context
     )
 
     index.save_to_disk(index_file)
 
 elif os.path.exists(index_file):
-    index = GPTSimpleVectorIndex.load_from_disk(index_file)
+    index = GPTVectorStoreIndex.load_from_disk(index_file)
 
     SimpleDirectoryReader = download_loader("SimpleDirectoryReader")
     loader = SimpleDirectoryReader(doc_path, recursive=True, exclude_hidden=True)
