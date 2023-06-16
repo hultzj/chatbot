@@ -1,9 +1,8 @@
 import os
+
 OPENAI_API_KEY = os.getenv("AI")
 if not OPENAI_API_KEY:
   raise "Env variable AI Key not specified"
-
-#os.environ["OPENAI_API_KEY"] = '{my_api_key}'
 
 import streamlit as st
 from llama_index import download_loader
@@ -28,39 +27,46 @@ def send_click():
 
     st.session_state.response  = query_engine.query(st.session_state.prompt)
 
-index = None
-st.title("HAL")
+def load_context():
 
-sidebar_placeholder = st.sidebar.container()
+    index = None
+    st.title("HAL")
 
-SimpleDirectoryReader = download_loader("SimpleDirectoryReader")
+    sidebar_placeholder = st.sidebar.container()
 
-loader = SimpleDirectoryReader(doc_path, recursive=True, exclude_hidden=True)
-documents = loader.load_data()
-sidebar_placeholder.header('Current Processing Document:')
-sidebar_placeholder.subheader(index_file)
-sidebar_placeholder.write(documents[0].get_text()[:10000]+'...')
+    SimpleDirectoryReader = download_loader("SimpleDirectoryReader")
 
-llm_predictor = LLMPredictor(llm=OpenAI(temperature=0, model_name="text-davinci-003"))
+    loader = SimpleDirectoryReader(doc_path, recursive=True, exclude_hidden=True)
+    documents = loader.load_data()
+    sidebar_placeholder.header('Current Processing Document:')
+    sidebar_placeholder.subheader(index_file)
+    sidebar_placeholder.write(documents[0].get_text()[:10000]+'...')
 
-max_input_size = 1096
-num_output = 256
-max_chunk_overlap = 20
-prompt_helper = PromptHelper(max_input_size, num_output, max_chunk_overlap)
+    llm_predictor = LLMPredictor(llm=OpenAI(temperature=0, model_name="text-davinci-003"))
 
-service_context = ServiceContext.from_defaults(llm_predictor=llm_predictor, prompt_helper=prompt_helper)
+    max_input_size = 1096
+    num_output = 256
+    max_chunk_overlap = 20
+    prompt_helper = PromptHelper(max_input_size, num_output, max_chunk_overlap)
 
-index = GPTVectorStoreIndex.from_documents(
-    documents, service_context=service_context
-)
+    service_context = ServiceContext.from_defaults(llm_predictor=llm_predictor, prompt_helper=prompt_helper)
 
-documents = SimpleDirectoryReader(index_file).load_data()
+    index = GPTVectorStoreIndex.from_documents(
+        documents, service_context=service_context
+    )
 
-service_context = ServiceContext.from_defaults(llm_predictor=llm_predictor, prompt_helper=prompt_helper,embed_model=embeddings)
-index = GPTVectorStoreIndex.from_documents(documents, service_context=service_context, prompt_helper=prompt_helper)
+    documents = SimpleDirectoryReader(index_file).load_data()
 
-index.storage_context.persist(persist_dir="<persist_dir>")
+    service_context = ServiceContext.from_defaults(llm_predictor=llm_predictor, prompt_helper=prompt_helper,embed_model=embeddings)
+    index = GPTVectorStoreIndex.from_documents(documents, service_context=service_context, prompt_helper=prompt_helper)
 
+    index.storage_context.persist(persist_dir="<persist_dir>")
+
+original_umask = os.umask(0)
+
+load_context()
+
+os.umask(original_umask)
 
 if index != None:
     st.text_input("Ask something: ", key='prompt')
