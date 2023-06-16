@@ -40,6 +40,7 @@ from llama_index import download_loader
 from llama_index.node_parser import SimpleNodeParser
 from llama_index import GPTVectorStoreIndex
 from llama_index import LLMPredictor, GPTVectorStoreIndex, PromptHelper, ServiceContext
+from llama_index import StorageContext, load_index_from_storage
 from langchain import OpenAI
 
 doc_path = './data/'
@@ -91,7 +92,7 @@ if uploaded_file is not None:
     index.save_to_disk(index_file)
 
 elif os.path.exists(index_file):
-    index = GPTVectorStoreIndex.load_from_disk(index_file)
+    index = GPTVectorStoreIndex.load_index_from_storage(index_file)
 
     SimpleDirectoryReader = download_loader("SimpleDirectoryReader")
     loader = SimpleDirectoryReader(doc_path, recursive=True, exclude_hidden=True)
