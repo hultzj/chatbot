@@ -55,11 +55,9 @@ def load_context():
 
     index.storage_context.persist(persist_dir="<persist_dir>")
 
-original_umask = os.umask(0)
+    return index 
 
-load_context()
-
-os.umask(original_umask)
+index = load_context()
 
 if index != None:
     st.text_input("Ask something: ", key='prompt')
