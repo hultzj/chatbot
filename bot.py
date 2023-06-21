@@ -12,9 +12,13 @@ from llama_index import LLMPredictor, GPTVectorStoreIndex, PromptHelper, Service
 from llama_index import StorageContext, load_index_from_storage
 from langchain import OpenAI
 
-doc_path = '/data/'
+doc_path = '/docs/'
 index_file = 'index.pdf'
 index = None
+llm_predictor = LLMPredictor(llm=OpenAI(temperature=0, model_name="text-davinci-003"))
+prompt_helper = PromptHelper(context_window=4096, num_output=256, chunk_overlap_ratio=0.1, chunk_size_limit=None)
+embed_model = OpenAIEmbedding()
+service_context = ServiceContext.from_defaults(llm_predictor=llm_predictor, prompt_helper=prompt_helper,embed_model=embed_model)
 
 if 'response' not in st.session_state:
     st.session_state.response = ''
@@ -39,18 +43,8 @@ def load_context():
     sidebar_placeholder.subheader(index_file)
     sidebar_placeholder.write(documents[0].get_text()[:10000]+'...')
 
-    llm_predictor = LLMPredictor(llm=OpenAI(temperature=0, model_name="text-davinci-003"))
-
-    prompt_helper = PromptHelper(context_window=4096, num_output=256, chunk_overlap_ratio=0.1, chunk_size_limit=None)
-
-    service_context = ServiceContext.from_defaults(llm_predictor=llm_predictor, prompt_helper=prompt_helper)
-
-    embed_model = OpenAIEmbedding()
-    # index = GPTVectorStoreIndex.from_documents(documents, service_context=service_context)
-
     documents = SimpleDirectoryReader(index_file).load_data()
 
-    service_context = ServiceContext.from_defaults(llm_predictor=llm_predictor, prompt_helper=prompt_helper,embed_model=embed_model)
     index = GPTVectorStoreIndex.from_documents(documents, service_context=service_context, prompt_helper=prompt_helper)
 
     index.storage_context.persist(persist_dir="<persist_dir>")
