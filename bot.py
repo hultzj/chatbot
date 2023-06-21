@@ -30,7 +30,7 @@ def send_click():
 
     query_engine = index.as_query_engine(service_context=service_context, verbose=True,response_mode="compact")
 
-    st.session_state.response  = query_engine.query(st.session_state.prompt)
+    st.session_state.response = query_engine.query(st.session_state.prompt)
 
 def load_context():
 
@@ -42,8 +42,6 @@ def load_context():
     sidebar_placeholder.header('Current Processing Document:')
     sidebar_placeholder.subheader(index_file)
     sidebar_placeholder.write(documents[0].get_text()[:10000]+'...')
-
-    documents = SimpleDirectoryReader(index_file).load_data()
 
     index = GPTVectorStoreIndex.from_documents(documents, service_context=service_context, prompt_helper=prompt_helper)
 
