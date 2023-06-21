@@ -44,7 +44,7 @@ def load_context():
     max_input_size = 1096
     num_output = 256
     max_chunk_overlap = 20
-    prompt_helper = PromptHelper(max_input_size, num_output, max_chunk_overlap)
+    prompt_helper = PromptHelper(context_window=4096, num_output=256, chunk_overlap_ratio=0.1, chunk_size_limit=None)
 
     service_context = ServiceContext.from_defaults(llm_predictor=llm_predictor, prompt_helper=prompt_helper)
 
