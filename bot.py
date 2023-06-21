@@ -8,7 +8,7 @@ import streamlit as st
 from llama_index import SimpleDirectoryReader
 from llama_index.node_parser import SimpleNodeParser
 from llama_index import GPTVectorStoreIndex
-from llama_index import LLMPredictor, GPTVectorStoreIndex, PromptHelper, ServiceContext
+from llama_index import LLMPredictor, GPTVectorStoreIndex, PromptHelper, ServiceContext, OpenAIEmbedding
 from llama_index import StorageContext, load_index_from_storage
 from langchain import OpenAI
 
@@ -41,20 +41,16 @@ def load_context():
 
     llm_predictor = LLMPredictor(llm=OpenAI(temperature=0, model_name="text-davinci-003"))
 
-    max_input_size = 1096
-    num_output = 256
-    max_chunk_overlap = 20
     prompt_helper = PromptHelper(context_window=4096, num_output=256, chunk_overlap_ratio=0.1, chunk_size_limit=None)
 
     service_context = ServiceContext.from_defaults(llm_predictor=llm_predictor, prompt_helper=prompt_helper)
 
-    index = GPTVectorStoreIndex.from_documents(
-        documents, service_context=service_context
-    )
+    embed_model = OpenAIEmbedding()
+    # index = GPTVectorStoreIndex.from_documents(documents, service_context=service_context)
 
     documents = SimpleDirectoryReader(index_file).load_data()
 
-    service_context = ServiceContext.from_defaults(llm_predictor=llm_predictor, prompt_helper=prompt_helper,embed_model=embeddings)
+    service_context = ServiceContext.from_defaults(llm_predictor=llm_predictor, prompt_helper=prompt_helper,embed_model=embed_model)
     index = GPTVectorStoreIndex.from_documents(documents, service_context=service_context, prompt_helper=prompt_helper)
 
     index.storage_context.persist(persist_dir="<persist_dir>")
