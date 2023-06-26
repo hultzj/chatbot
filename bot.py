@@ -77,7 +77,11 @@ def text_to_docs(text: str) -> List[Document]:
 
 @st.cache_data
 def test_embed():
-    embeddings = OpenAIEmbeddings(openai_api_key=api)
+    embeddings = OpenAIEmbeddings(
+      OPENAI_API_KEY = os.getenv("AI")
+  if not OPENAI_API_KEY:
+   raise "Env variable AI Key not specified"  
+    )
     # Indexing
     # Save in a Vector DB
     with st.spinner("It's indexing..."):
