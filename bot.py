@@ -98,7 +98,7 @@ index = None
 
 llm_predictor = LLMPredictor(
     llm=OpenAI(
-        temperature=0, model_name="text-davinci-003", OPENAI_API_KEY=os.getenv("AI")
+        temperature=0, model_name="text-davinci-003"
         )
     )
 prompt_helper = PromptHelper(context_window=4096, num_output=256, chunk_overlap_ratio=0.1, chunk_size_limit=None)
