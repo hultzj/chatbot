@@ -113,7 +113,7 @@ if 'response' not in st.session_state:
 def load_context():
     documents = SimpleDirectoryReader(doc_path).load_data()
     index = GPTVectorStoreIndex.from_documents(documents, service_context=service_context, prompt_helper=prompt_helper)
-    index.storage_context.persist(persist_dir="<persist_dir>")
+    index.storage_context.persist(persist_dir="vector")
     return index 
 
 if "memory" not in st.session_state:
@@ -124,7 +124,7 @@ if "memory" not in st.session_state:
 index = load_context()
 
 def send_click():
-    storage_context = StorageContext.from_defaults(persist_dir="<persist_dir>")
+    storage_context = StorageContext.from_defaults(persist_dir="vector")
     index = load_index_from_storage(storage_context)
     query_engine = index.as_query_engine(service_context=service_context, verbose=True,response_mode="compact")
     st.session_state.response = query_engine.query(st.session_state.prompt)
