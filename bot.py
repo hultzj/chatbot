@@ -10,6 +10,7 @@ from llama_index import SimpleDirectoryReader
 from llama_index.node_parser import SimpleNodeParser
 from llama_index import GPTVectorStoreIndex
 from llama_index import LLMPredictor, GPTVectorStoreIndex, PromptHelper, ServiceContext, OpenAIEmbedding
+from llama_index import download_loader
 from llama_index import StorageContext, load_index_from_storage
 from langchain import OpenAI
 from langchain import LLMChain
@@ -95,7 +96,11 @@ doc_path = '/docs/'
 index_file = 'index.pdf'
 index = None
 
-llm_predictor = LLMPredictor(llm=OpenAI(temperature=0, model_name="text-davinci-003"))
+llm_predictor = LLMPredictor(
+    llm=OpenAI(
+        temperature=0, model_name="text-davinci-003", OPENAI_API_KEY=os.getenv("AI")
+        )
+    )
 prompt_helper = PromptHelper(context_window=4096, num_output=256, chunk_overlap_ratio=0.1, chunk_size_limit=None)
 embed_model = OpenAIEmbedding()
 service_context = ServiceContext.from_defaults(llm_predictor=llm_predictor, prompt_helper=prompt_helper,embed_model=embed_model)
