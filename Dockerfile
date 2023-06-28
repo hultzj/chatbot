@@ -12,6 +12,6 @@ RUN pip install --upgrade pip && \
     chmod -R 775 /docs && \
     pip --no-cache-dir install -r requirements.txt && \
     set -ex && \
-    wget https://kodekloud.com/wp-content/uploads/2020/11/Kubernetes-for-Beginners.pdf --output-document=/docs/index.pdf
+  #  wget https://kodekloud.com/wp-content/uploads/2020/11/Kubernetes-for-Beginners.pdf --output-document=/docs/index.pdf
 
-CMD ["streamlit", "run", "bot.py", "--server.port=8080"]
+CMD ["streamlit", "run", "bot2.py", "--server.port=8080"]
