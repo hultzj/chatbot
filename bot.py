@@ -1,3 +1,4 @@
+""" 
 import os
 import streamlit as st
 import re
@@ -124,8 +125,8 @@ if "memory" not in st.session_state:
 index = load_context()
 
 def send_click():
-    storage_context = StorageContext.from_defaults(persist_dir="vector")
-    index = load_index_from_storage(storage_context)
+   # storage_context = StorageContext.from_defaults(persist_dir="vector")
+    #index = load_index_from_storage(storage_context)
     query_engine = index.as_query_engine(service_context=service_context, verbose=True,response_mode="compact")
     st.session_state.response = query_engine.query(st.session_state.prompt)
 
@@ -136,3 +137,4 @@ if index != None:
         st.subheader("Response: ")
         st.success(st.session_state.response, icon= "🤖")
 
+ """
