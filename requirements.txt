@@ -2,3 +2,4 @@ openai
 llama-index
 streamlit
 pypdf
+pinecone-client
