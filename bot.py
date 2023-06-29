@@ -25,22 +25,22 @@ st.title("Roku Bot")
 if 'response' not in st.session_state:
     st.session_state.response = ''
 
-@st.cache()
+@st.cache_data()
 def load_context():
     documents = SimpleDirectoryReader(doc_path).load_data()
     index = GPTVectorStoreIndex.from_documents(documents, service_context=service_context, prompt_helper=prompt_helper)
     index.storage_context.persist(persist_dir="<persist_dir>")
     return index 
 
-index = load_context()
+# index = load_context()
 
 def send_click():
-    # storage_context = StorageContext.from_defaults(persist_dir="<persist_dir>")
-    # index = load_index_from_storage(storage_context)
+    storage_context = StorageContext.from_defaults(persist_dir="<persist_dir>")
+    index = load_index_from_storage(storage_context)
     query_engine = index.as_query_engine(service_context=service_context, verbose=True,response_mode="compact")
     st.session_state.response = query_engine.query(st.session_state.prompt)
 
-if index != None:
+if load_context() != None:
     st.text_input("Ask something: ", key='prompt')
     st.button("Send", on_click=send_click)
     if st.session_state.response:
