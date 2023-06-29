@@ -62,7 +62,7 @@ def chat(query):
   index = GPTSimpleVectorIndex.load_from_disk("gpt_index_docs.json")
   response = index.query(query)
   print(response)
-'''
+
 st.title("Tiger Bot")
 
 doc_input = st.text_input(" place url")
@@ -71,8 +71,14 @@ if st.button("load documents"):
   st.markdown(load_documents_to_gpt_vectorstore(doc_input))
   st.success()
 
-question = st.text_input("Question you have:")
+#question = st.text_input("Question you have:", key='prompt')
 
-if st.button("Answer you seek")
-  answer = 
-'''
+#if st.button("Answer you seek"):
+
+  
+if index != None:
+    st.text_input("Ask something: ", key='prompt')
+    st.button("Send", on_click=send_click)
+    if st.session_state.response:
+        st.subheader("Response: ")
+        st.success(st.session_state.response, icon= "🤖")
