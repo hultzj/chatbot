@@ -66,7 +66,7 @@ def chat(query):
 
 st.title("Tiger Bot")
 
-doc_input = st.text_input(" place url")
+doc_input = st.text_input("URL I require")
 
 if st.button("load documents"):
   st.markdown(load_documents_to_gpt_vectorstore(doc_input))
@@ -77,8 +77,7 @@ if st.button("load documents"):
 #if st.button("Answer you seek"):
 
   
-if index != None:
-    st.text_input("Ask something: ", key='prompt')
+if st.text_input("Ask something: ", key='prompt')
     st.button("Send", on_click=send_click)
     if st.session_state.response:
         st.subheader("Response: ")
