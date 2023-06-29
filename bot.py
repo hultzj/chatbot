@@ -25,7 +25,7 @@ st.title("Roku Bot")
 if 'response' not in st.session_state:
     st.session_state.response = ''
 
-@st.cache_data()
+@st.cache_resource()
 def load_context():
     documents = SimpleDirectoryReader(doc_path).load_data()
     index = GPTVectorStoreIndex.from_documents(documents, service_context=service_context, prompt_helper=prompt_helper)
