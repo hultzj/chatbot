@@ -8,7 +8,7 @@ import streamlit as st
 import pinecone
 import json 
 from llama_index import(
-    GPTSimpleVectorIndex,
+    GPTVectorStoreIndex,
     ServiceContext,
     LLMPredictor,
     PromptHelper,
