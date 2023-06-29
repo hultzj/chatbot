@@ -7,6 +7,7 @@ from langchain.embeddings.openai import OpenAIEmbeddings
 import streamlit as st 
 import pinecone
 import json 
+import os
 from llama_index import(
     GPTVectorStoreIndex,
     ServiceContext,
