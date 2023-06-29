@@ -14,7 +14,7 @@ def scrape(site):
             if "href" in i.attrs:
                 href = i.attrs["href"]
 
-                if href.startswitch("/") or href.startswitch("#"):
+                if href.startswith("/") or href.startswith("#"):
                     full_url = site + href 
 
                     if full_url not in urls:
