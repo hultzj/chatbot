@@ -10,7 +10,7 @@ RUN pip install --upgrade pip && \
     mkdir /docs && \
     chmod -R 775 /data && \
     chmod -R 775 /docs && \
-    pip --no-cache-dir --user install -r requirements.txt && \
+    pip --no-cache-dir install --user -r requirements.txt && \
     set -ex 
   #  wget https://kodekloud.com/wp-content/uploads/2020/11/Kubernetes-for-Beginners.pdf --output-document=/docs/index.pdf
 
