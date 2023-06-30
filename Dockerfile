@@ -1,5 +1,5 @@
-#FROM python:3.11
-FROM registry.redhat.io/rhel9/python-39:1-125
+FROM python:3.11
+#FROM registry.redhat.io/rhel9/python-39:1-125
 
 USER 0
 
