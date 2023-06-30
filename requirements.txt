@@ -1,6 +1,7 @@
 openai 
-llama-index==0.6.9
-langchain==0.0.174 
+llama-index
+langchain 
 streamlit
 pypdf
 pinecone-client
+BeautifulSoup4
