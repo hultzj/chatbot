@@ -77,7 +77,7 @@ if st.button("load documents"):
 #if st.button("Answer you seek"):
 
   
-if st.text_input("Ask something: ", key='prompt')
+if st.text_input("Ask something: ", key='prompt'):
     st.button("Send", on_click=send_click)
     if st.session_state.response:
         st.subheader("Response: ")
