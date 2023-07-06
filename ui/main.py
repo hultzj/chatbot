@@ -8,7 +8,8 @@ if 'response' not in st.session_state:
     st.session_state.response = ''
 
 def query():
-    st.session_state.response = requests.get("http://roku.rrama.svc.cluster.local:8080/query?question="+st.session_state.prompt).json()
+    data = requests.get("http://roku.rrama.svc.cluster.local:8080/query?question="+st.session_state.prompt).json()
+    st.session_state.response = data['response']
 
 st.text_input("Ask something: ", key='prompt')
 st.button("Send", on_click=query)
