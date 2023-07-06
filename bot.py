@@ -6,11 +6,13 @@ from llama_index import GPTVectorStoreIndex
 from llama_index import LLMPredictor, GPTVectorStoreIndex, PromptHelper, ServiceContext, OpenAIEmbedding
 from llama_index import StorageContext, load_index_from_storage
 from langchain import OpenAI
+from fastapi import FastAPI
 
 OPENAI_API_KEY = os.getenv("AI")
 if not OPENAI_API_KEY:
   raise "Env variable AI Key not specified"
 
+app = FastAPI()
 doc_path = '/docs/'
 index_file = 'index.pdf'
 index = None
@@ -20,12 +22,6 @@ prompt_helper = PromptHelper(context_window=4096, num_output=256, chunk_overlap_
 embed_model = OpenAIEmbedding()
 service_context = ServiceContext.from_defaults(llm_predictor=llm_predictor, prompt_helper=prompt_helper,embed_model=embed_model)
 
-st.title("Roku Bot")
-
-if 'response' not in st.session_state:
-    st.session_state.response = ''
-
-@st.cache_resource()
 def load_context():
     documents = SimpleDirectoryReader(doc_path).load_data()
     index = GPTVectorStoreIndex.from_documents(documents, service_context=service_context, prompt_helper=prompt_helper)
@@ -34,15 +30,10 @@ def load_context():
 
 index = load_context()
 
-def send_click():
+@app.get("/query")
+def query(question: str):
     # storage_context = StorageContext.from_defaults(persist_dir="<persist_dir>")
     # index = load_index_from_storage(storage_context)
     query_engine = index.as_query_engine(service_context=service_context, verbose=True,response_mode="compact")
+    return query_engine.query(question)
     st.session_state.response = query_engine.query(st.session_state.prompt)
-
-if index != None:
-    st.text_input("Ask something: ", key='prompt')
-    st.button("Send", on_click=send_click)
-    if st.session_state.response:
-        st.subheader("Response: ")
-        st.success(st.session_state.response, icon= "🤖")
