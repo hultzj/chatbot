@@ -14,4 +14,4 @@ RUN pip install --upgrade pip && \
     set -ex && \
     wget https://kodekloud.com/wp-content/uploads/2020/11/Kubernetes-for-Beginners.pdf --output-document=/docs/index.pdf
 
-CMD ["uvicorn", "bot:app", "--port 8080", "--reload"]
+CMD ["uvicorn", "bot:app", "--host 0.0.0.0", "--port 8080"]
