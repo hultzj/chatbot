@@ -1,5 +1,4 @@
 import os
-import streamlit as st
 from llama_index import SimpleDirectoryReader
 from llama_index.node_parser import SimpleNodeParser
 from llama_index import GPTVectorStoreIndex
@@ -36,4 +35,3 @@ def query(question: str):
     # index = load_index_from_storage(storage_context)
     query_engine = index.as_query_engine(service_context=service_context, verbose=True,response_mode="compact")
     return query_engine.query(question)
-    st.session_state.response = query_engine.query(st.session_state.prompt)
